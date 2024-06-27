@@ -24,15 +24,14 @@ class FatTreeTopo(Topo):
         core_counter = 0
         aggr_counter = 0
         edge_counter = 0
-        host_counter = 0
         
-        coreSwitches = [self.addSwitch('Core-S{}'.format(i + 1), dpid='{:016x}'.format(core_counter + i)) for i in range(numCoreSwitches)]
+        coreSwitches = [self.addSwitch('Core-S{}'.format(i + 1), dpid='000000000000000{}'.format(core_counter + i)) for i in range(numCoreSwitches)]
         core_counter += numCoreSwitches
 
         for p in range(1, numPods + 1):
-            aggrSwitches = [self.addSwitch('Agg-S{}'.format((p-1)*2 + i + 1), dpid='01{:014x}'.format(aggr_counter + i)) for i in range(numAggrSwitchesPerPod)]
+            aggrSwitches = [self.addSwitch('Agg-S{}'.format((p-1)*2 + i + 1), dpid='010000000000000{}'.format(aggr_counter + i)) for i in range(numAggrSwitchesPerPod)]
             aggr_counter += numAggrSwitchesPerPod
-            edgeSwitches = [self.addSwitch('Acc-S{}'.format((p-1)*2 + i + 1), dpid='02{:014x}'.format(edge_counter + i)) for i in range(numEdgeSwitchesPerPod)]
+            edgeSwitches = [self.addSwitch('Acc-S{}'.format((p-1)*2 + i + 1), dpid='020000000000000{}'.format(edge_counter + i)) for i in range(numEdgeSwitchesPerPod)]
             edge_counter += numEdgeSwitchesPerPod
 
             for i, aggr in enumerate(aggrSwitches):
