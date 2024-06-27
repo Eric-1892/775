@@ -20,19 +20,20 @@ class FatTreeTopo(Topo):
         numEdgeSwitchesPerPod = k // 2
         numAggrSwitchesPerPod = k // 2
         numCoreSwitches = (k // 2) ** 2
-        
-        coreSwitches = [self.addSwitch('Core-S{}'.format(i + 1), dpid='010000000000{:02x}'.format(i)) for i in range(numCoreSwitches)]
 
-        aggr_dpid_suffix = 0
-        edge_dpid_suffix = 0
+        core_counter = 0
+        aggr_counter = 0
+        edge_counter = 0
+        
+        coreSwitches = [self.addSwitch('Core-S{}'.format(i + 1), dpid='00:00:00:00:00:00:00:{:02x}'.format(core_counter + i)) for i in range(numCoreSwitches)]
+        core_counter += numCoreSwitches
 
         for p in range(1, numPods + 1):
-            aggrSwitches = [self.addSwitch('Agg-S{}'.format((p-1)*2 + i + 1), dpid='020000000000{:02x}'.format(aggr_dpid_suffix + i)) for i in range(numAggrSwitchesPerPod)]
-            aggr_dpid_suffix += numAggrSwitchesPerPod
-            
-            edgeSwitches = [self.addSwitch('Acc-S{}'.format((p-1)*2 + i + 1), dpid='030000000000{:02x}'.format(edge_dpid_suffix + i)) for i in range(numEdgeSwitchesPerPod)]
-            edge_dpid_suffix += numEdgeSwitchesPerPod
-            
+            aggrSwitches = [self.addSwitch('Agg-S{}'.format((p-1)*2 + i + 1), dpid='01:00:00:00:00:00:00:{:02x}'.format(aggr_counter + i)) for i in range(numAggrSwitchesPerPod)]
+            aggr_counter += numAggrSwitchesPerPod
+            edgeSwitches = [self.addSwitch('Acc-S{}'.format((p-1)*2 + i + 1), dpid='02:00:00:00:00:00:00:{:02x}'.format(edge_counter + i)) for i in range(numEdgeSwitchesPerPod)]
+            edge_counter += numEdgeSwitchesPerPod
+
             for i, aggr in enumerate(aggrSwitches):
                 for j, core in enumerate(coreSwitches):
                     if (j // numAggrSwitchesPerPod) % numAggrSwitchesPerPod == i:
@@ -43,7 +44,7 @@ class FatTreeTopo(Topo):
                     self.addLink(edge, aggr)
 
                 for _ in range(numHostsPerEdgeSwitch):
-                    host = self.addHost('h{}'.format(FatTreeTopo.hostcount), dpid='040000000000{:02x}'.format(FatTreeTopo.hostcount))
+                    host = self.addHost('h{}'.format(FatTreeTopo.hostcount), dpid='03:00:00:00:00:00:00:{:02x}'.format(FatTreeTopo.hostcount))
                     self.addLink(edge, host)
                     FatTreeTopo.hostcount += 1
 
