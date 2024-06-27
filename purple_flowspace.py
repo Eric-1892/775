@@ -1,3 +1,5 @@
+import os
+
 commands = [
     # Acc-S2
     "fvctl -n add-flowspace purp1 0200000000000002 1 in_port=1,nw_src=10.0.0.5 nw_src=10.0.0.6 nw_dst=10.0.0.3 nw_dst=10.0.0.4 purple=7",
