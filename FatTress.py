@@ -21,11 +21,20 @@ class FatTreeTopo(Topo):
         numAggrSwitchesPerPod = k // 2
         numCoreSwitches = (k // 2) ** 2
         
-        coreSwitches = [self.addSwitch('Core-S{}'.format(i + 1), dpid='{:016x}'.format(i + 1)) for i in range(numCoreSwitches)]
-        
+        # 核心交换机的 DPID 前缀
+        coreSwitches = [self.addSwitch('Core-S{}'.format(i + 1), dpid='000000000001{:02x}'.format(i)) for i in range(numCoreSwitches)]
+
+        aggr_dpid_suffix = 0
+        edge_dpid_suffix = 0
+
         for p in range(1, numPods + 1):
-            aggrSwitches = [self.addSwitch('Agg-S{}'.format((p-1)*2 + i + 1), dpid='{:016x}'.format(numCoreSwitches + (p-1)*2 + i + 1)) for i in range(numAggrSwitchesPerPod)]
-            edgeSwitches = [self.addSwitch('Acc-S{}'.format((p-1)*2 + i + 1), dpid='{:016x}'.format(numCoreSwitches + numAggrSwitchesPerPod + (p-1)*2 + i + 1)) for i in range(numEdgeSwitchesPerPod)]
+            # 聚合交换机的 DPID 前缀
+            aggrSwitches = [self.addSwitch('Agg-S{}'.format((p-1)*2 + i + 1), dpid='000000000002{:02x}'.format(aggr_dpid_suffix)) for i in range(numAggrSwitchesPerPod)]
+            aggr_dpid_suffix += numAggrSwitchesPerPod
+            
+            # 边缘交换机的 DPID 前缀
+            edgeSwitches = [self.addSwitch('Acc-S{}'.format((p-1)*2 + i + 1), dpid='000000000003{:02x}'.format(edge_dpid_suffix)) for i in range(numEdgeSwitchesPerPod)]
+            edge_dpid_suffix += numEdgeSwitchesPerPod
             
             for i, aggr in enumerate(aggrSwitches):
                 for j, core in enumerate(coreSwitches):
