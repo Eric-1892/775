@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from mininet.topo import Topo
 from mininet.net import Mininet
 from mininet.node import OVSSwitch
@@ -22,19 +21,16 @@ class FatTreeTopo(Topo):
         numAggrSwitchesPerPod = k // 2
         numCoreSwitches = (k // 2) ** 2
         
-        # 核心交换机的 DPID 前缀
-        coreSwitches = [self.addSwitch('Core-S{}'.format(i + 1), dpid='000000000001{:02x}'.format(i)) for i in range(numCoreSwitches)]
+        coreSwitches = [self.addSwitch('Core-S{}'.format(i + 1), dpid='010000000000{:02x}'.format(i)) for i in range(numCoreSwitches)]
 
         aggr_dpid_suffix = 0
         edge_dpid_suffix = 0
 
         for p in range(1, numPods + 1):
-            # 聚合交换机的 DPID 前缀
-            aggrSwitches = [self.addSwitch('Agg-S{}'.format((p-1)*2 + i + 1), dpid='000000000002{:02x}'.format(aggr_dpid_suffix)) for i in range(numAggrSwitchesPerPod)]
+            aggrSwitches = [self.addSwitch('Agg-S{}'.format((p-1)*2 + i + 1), dpid='020000000000{:02x}'.format(aggr_dpid_suffix + i)) for i in range(numAggrSwitchesPerPod)]
             aggr_dpid_suffix += numAggrSwitchesPerPod
             
-            # 边缘交换机的 DPID 前缀
-            edgeSwitches = [self.addSwitch('Acc-S{}'.format((p-1)*2 + i + 1), dpid='000000000003{:02x}'.format(edge_dpid_suffix)) for i in range(numEdgeSwitchesPerPod)]
+            edgeSwitches = [self.addSwitch('Acc-S{}'.format((p-1)*2 + i + 1), dpid='030000000000{:02x}'.format(edge_dpid_suffix + i)) for i in range(numEdgeSwitchesPerPod)]
             edge_dpid_suffix += numEdgeSwitchesPerPod
             
             for i, aggr in enumerate(aggrSwitches):
@@ -47,7 +43,7 @@ class FatTreeTopo(Topo):
                     self.addLink(edge, aggr)
 
                 for _ in range(numHostsPerEdgeSwitch):
-                    host = self.addHost('h{}'.format(FatTreeTopo.hostcount))
+                    host = self.addHost('h{}'.format(FatTreeTopo.hostcount), dpid='040000000000{:02x}'.format(FatTreeTopo.hostcount))
                     self.addLink(edge, host)
                     FatTreeTopo.hostcount += 1
 
