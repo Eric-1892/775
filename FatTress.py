@@ -21,9 +21,9 @@ class FatTreeTopo(Topo):
         numAggrSwitchesPerPod = k // 2
         numCoreSwitches = (k // 2) ** 2
 
-        core_counter = 0
-        aggr_counter = 0
-        edge_counter = 0
+        core_counter = 1
+        aggr_counter = 1
+        edge_counter = 1
         
         coreSwitches = [self.addSwitch('Core-S{}'.format(i + 1), dpid='000000000000000{}'.format(core_counter + i)) for i in range(numCoreSwitches)]
         core_counter += numCoreSwitches
