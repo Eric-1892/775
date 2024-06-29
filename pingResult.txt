@@ -1,0 +1,19 @@
+mininet> pingall
+*** Ping: testing ping reachability
+h1 -> X X X X X X X X X X X X X X X 
+h2 -> X X X X X X X X X X X X X X X 
+h3 -> X X h4 h5 h6 X X X X X X X X X X 
+h4 -> X X h3 h5 h6 X X X X X X X X X X 
+h5 -> X X h3 h4 h6 X X X X X X X X X X 
+h6 -> X X h3 h4 h5 X X X X X X X X X X 
+h7 -> X X X X X X X X X X X X X X X 
+h8 -> X X X X X X X X X X X X X X X 
+h9 -> X X X X X X X X h10 h11 h12 X X X X 
+h10 -> X X X X X X X X h9 h11 h12 X X X X 
+h11 -> X X X X X X X X h9 h10 h12 X X X X 
+h12 -> X X X X X X X X h9 h10 h11 h13 h14 X X 
+h13 -> X X X X X X X X X X X h12 h14 X X 
+h14 -> X X X X X X X X X X X h12 h13 X X 
+h15 -> X X X X X X X X X X X X X X X 
+h16 -> X X X X X X X X X X X X X X X 
+*** Results: 87% dropped (30/240 received)
